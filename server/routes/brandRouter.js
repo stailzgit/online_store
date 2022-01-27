@@ -1,9 +1,10 @@
 const Router = require('express')
 const router = new Router()
+const brandController = require('../controllers/brandController')
 
-router.post('/registration',)
-router.post('/login',)
-router.get('/auth',)
+
+router.post('/', brandController.create)
+router.get('/', brandController.getAll)
 
 
 
