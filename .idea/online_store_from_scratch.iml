@@ -8,5 +8,8 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="react-router-dom" level="project" />
+    <orderEntry type="library" name="react" level="project" />
+    <orderEntry type="library" name="react-bootstrap" level="project" />
   </component>
 </module>
