@@ -12,6 +12,10 @@ const CreateDevice = ({show, onHide}) => {
         console.log("Info ",infoList)
         setInfoList([...infoList, {title: '', description: '', number: Date.now()}])
     }
+
+    const removeInfo = (number) => {
+        setInfoList(infoList.filter(item => item.number !== number))
+    }
     return (
         <Modal
             show={show}
@@ -52,7 +56,7 @@ const CreateDevice = ({show, onHide}) => {
                         Добавить новое свойство
                     </Button>
                     {infoList?.map(item =>
-                        <Row className='mt-2'>
+                        <Row className='mt-2' key={item.number}>
                             <Col md={4}>
                                 <Form.Control placeholder='Введите название свойства'/>
                             </Col>
@@ -60,7 +64,7 @@ const CreateDevice = ({show, onHide}) => {
                                 <Form.Control placeholder='Введите описание свойства'/>
                             </Col>
                             <Col md={4}>
-                                <Button variant='outline-danger'>
+                                <Button variant='outline-danger' onClick={() => removeInfo(item.number)}>
                                     Удалить
                                 </Button>
                             </Col>

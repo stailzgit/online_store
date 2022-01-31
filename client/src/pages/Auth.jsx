@@ -2,11 +2,22 @@ import React from 'react'
 import {Button, Card, Container, Form} from "react-bootstrap";
 import {LOGIN_ROUTE, REGISTRATION_ROUTE} from "../utils/consts";
 import {NavLink, useLocation} from "react-router-dom";
+import {login, registration} from "../http/userApi";
 
 const Auth = () => {
     const location = useLocation()
     const isLogin = location.pathname === LOGIN_ROUTE
 
+    const click = async () => {
+        if(isLogin){
+            const response = await login()
+        } else {
+            const response = await registration()
+        }
+
+        const response = await registration()
+
+    }
 
     return (
         <Container
@@ -29,7 +40,7 @@ const Auth = () => {
                             </div>
 
                         }
-                        <Button variant="outline-success">
+                        <Button onClick={click} variant="outline-success">
                             {isLogin? "Войти": "Регистрация"}
                         </Button>
                     </div>
