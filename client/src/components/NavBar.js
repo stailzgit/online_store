@@ -2,33 +2,47 @@ import React, {useContext} from 'react';
 import {Context} from "../index";
 import {Navbar, Nav} from 'react-bootstrap'
 import {NavLink} from "react-router-dom";
-import {SHOP_ROUTE} from "../utils/consts";
+import {ADMIN_ROUTE, LOGIN_ROUTE, SHOP_ROUTE} from "../utils/consts";
 import Container from "react-bootstrap/Container";
 import Button from "react-bootstrap/Button";
-import {observable} from "mobx";
 import {observer} from "mobx-react-lite";
+import {useNavigate} from 'react-router-dom'
+
 
 const NavBar = observer(() => {
-  const {user} = useContext(Context)
+    const {user} = useContext(Context)
+    const navigate = useNavigate()
+    return (
+        <Navbar bg="dark" variant="dark">
+            <Container>
+                <NavLink style={{color: 'white', textDecoration: 'none'}} to={SHOP_ROUTE}>КупиСлона</NavLink>
+                {user.isAuth ?
+                    <Nav className="ml-auto" style={{color: 'white'}}>
+                        <Button className={"mx-2"}
+                                variant={'outline-light'}
+                                onClick={() => navigate(ADMIN_ROUTE)}
+                        >
+                            Админ панель
+                        </Button>
+                        <Button variant={'outline-light'}
+                                onClick={() => navigate(LOGIN_ROUTE)}
+                        >
+                            Выйти
+                        </Button>
+                    </Nav>
+                    :
+                    <Nav className="ml-auto" style={{color: 'white'}}>
+                        <Button variant={'outline-light'}
+                                onClick={() => user.setIsAuth(true)}
+                        >
+                            Авторизация
+                        </Button>
+                    </Nav>
+                }
+            </Container>
 
-  return (
-    <Navbar bg="dark" variant="dark">
-      <Container>
-        <NavLink style={{color: 'white', textDecoration: 'none'}} to={SHOP_ROUTE}>КупиСлона</NavLink>
-        {user.isAuth ?
-          <Nav className="ml-auto" style={{color: 'white'}}>
-            <Button className={"mx-2"} variant={'outline-light'}>Админ панель</Button>
-            <Button variant={'outline-light'}>Выйти</Button>
-          </Nav>
-          :
-          <Nav className="ml-auto" style={{color: 'white'}}>
-            <Button variant={'outline-light'} onClick={() => user.setIsAuth(true)}>Авторизация</Button>
-          </Nav>
-        }
-      </Container>
-
-    </Navbar>
-  );
+        </Navbar>
+    );
 })
 
 export default NavBar;
