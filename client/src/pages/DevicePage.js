@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import Container from "react-bootstrap/Container";
 import Col from "react-bootstrap/Col";
 import Image from "react-bootstrap/Image";
@@ -6,20 +6,23 @@ import Row from "react-bootstrap/Row";
 import bigStar from '../assets/bigStar.png'
 import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
+import {useParams} from 'react-router-dom'
+import {fetchOneDevice} from "../http/deviceApi";
+
 const DevicePage = () => {
-    const device = { "id": 1, "name": "12 pro", "price": "100000", "rating": "0", "img": "https://www.purposechurch.com/wp-content/uploads/2017/10/fpo400x300.png", "createdAt": "2022-01-27T18:48:23.425Z", "updatedAt": "2022-01-27T18:48:23.425Z", "typeId": 2, "brandId": 2}
-    const description = [
-        {id: 1, title: "Оперативная память", description: '5 гб'},
-        {id: 2, title: "Камера", description: '12 мп'},
-        {id: 3, title: "Процессор", description: 'Intel core i5 8300U'},
-        {id: 4, title: "Кол-во ядер", description: '8'},
-        {id: 5, title: "Аккумулятор", description: '5000'}
-    ]
+    const [device, setDevice] = useState({info: []});
+    const {id} = useParams()
+    useEffect(() => {
+        fetchOneDevice(id).then(data => setDevice(data))
+        console.log('device',device)
+
+    }, [])
+
     return (
         <Container className="mt-3">
             <Row>
                 <Col md={4}>
-                    <Image size={300} src={device.img} />
+                    <Image width={300} heigth={300} src={process.env.REACT_APP_API_URL + device.img} />
                 </Col>
                 <Col md={4}>
                     <div className='d-flex flex-column align-items-center'>
@@ -47,7 +50,7 @@ const DevicePage = () => {
 
             <Row className='d-flex flex-column m-3'>
                 <h1>Характеристики</h1>
-                {description.map((item) =>
+                {device.info.map((item) =>
                     <Row key={item.id}
                         style={{background: item.id % 2 !== 0 && 'lightgray', padding:10}}
                     >

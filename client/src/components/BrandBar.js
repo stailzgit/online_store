@@ -6,7 +6,6 @@ import Card from "react-bootstrap/Card";
 
 const BrandBar = observer(() => {
     const {devices} = useContext(Context)
-    console.log(devices.brands[1].id)
     return (
         <div className="d-flex flex-wrap">
             {devices.brands.map(brand =>

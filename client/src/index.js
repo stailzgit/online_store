@@ -6,7 +6,6 @@ import DeviceStore from "./store/DeviceStore";
 import "./index.css"
 
 export const Context = createContext(null)
-
 ReactDOM.render(
   <Context.Provider value={{
     user: new UserStore(),
