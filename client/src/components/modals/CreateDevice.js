@@ -2,10 +2,11 @@ import React, {useContext, useEffect, useState} from 'react';
 import Modal from "react-bootstrap/Modal";
 import {Button, Dropdown, Form, Row, Col} from "react-bootstrap";
 import {Context} from "../../index";
-import device from "../../store/DeviceStore";
-import {setSelectedBrand, setSelectedType} from '../../store/DeviceStore'
+import device from "../../store/tore";
 import {createDevice, fetchBrands, fetchDevices, fetchTypes} from "../../http/deviceApi";
 import {observer} from "mobx-react-lite";
+import {login} from "../../http/userApi";
+import ErrorModal from "./ErrorModal";
 
 const CreateDevice = observer(({show, onHide}) => {
 
@@ -15,6 +16,18 @@ const CreateDevice = observer(({show, onHide}) => {
     const [name, setName] = useState('');
     const [price, setPrice] = useState(0);
     const [file, setFile] = useState(null);
+
+    const [errorModalShow, setErrorModalShow] = React.useState(false);
+
+    const isValidForm = () => {
+        console.log('name', name)
+        console.log('price', price)
+        console.log('file', file)
+        console.log('info.length', info.length)
+       return name.trim() && price > 0 && file && info.length
+
+    }
+
 
 
     useEffect(()=>{
@@ -45,7 +58,13 @@ const CreateDevice = observer(({show, onHide}) => {
     //     createDevice(formData).then(data => onHide())
     // }
 
+
     const addDevice = () => {
+        if(!isValidForm()) {
+            setErrorModalShow(true)
+            return
+        }
+
         const formData = new FormData()
         formData.append('name', name)
         formData.append('price', `${price}`)
@@ -53,7 +72,15 @@ const CreateDevice = observer(({show, onHide}) => {
         formData.append('brandId', devices.selectedBrand.id)
         formData.append('typeId', devices.selectedType.id)
         formData.append('info', JSON.stringify(info))
-        createDevice(formData).then(data => onHide())
+        createDevice(formData)
+            .then(data => {
+                onHide()
+                setInfo([])
+                setName('')
+                setPrice(0)
+                setFile(null)
+            })
+            .catch(error => alert(error))
         console.log(formData)
         console.log('info', JSON.stringify(info))
     }
@@ -70,6 +97,7 @@ const CreateDevice = observer(({show, onHide}) => {
             size="lg"
             centered
         >
+            <ErrorModal show={errorModalShow} onHide={() => setErrorModalShow(false)}/>
             <Modal.Header>
                 <h2>Добавление устройства</h2>
             </Modal.Header>
@@ -115,12 +143,7 @@ const CreateDevice = observer(({show, onHide}) => {
                                   onChange={selectFile}
                     />
                     <hr/>
-                    <Button
-                        variant={'outline-dark'}
-                        onClick={addInfoList}
-                    >
-                        Добавить новое свойство
-                    </Button>
+
                     {info.map(item =>
                         <Row className='mt-2' key={item.number}>
                             <Col md={4}>
@@ -142,6 +165,13 @@ const CreateDevice = observer(({show, onHide}) => {
                             </Col>
                         </Row>
                     )}
+                    <Button
+                        variant={'outline-dark'}
+                        onClick={addInfoList}
+                        className='mt-3'
+                    >
+                        Добавить новое свойство
+                    </Button>
                 </Form>
             </Modal.Body>
             <Modal.Footer>
